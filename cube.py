@@ -242,9 +242,8 @@ class Cube:
         self.faces['R'][...] = R
 
     def plot_cube(self):
-        if not hasattr(self, "fig"):
-            self.fig = plt.figure()
-        if not hasattr(self, "ax"):
+        if not hasattr(self, "fig") or not plt.fignum_exists(100):
+            self.fig = plt.figure(num=100)
             self.ax = self.fig.add_subplot(111, projection='3d')
 
         plot_color_map = {
@@ -324,7 +323,7 @@ class Cube:
         self.ax.set_ylim(0, self.n)
         self.ax.set_zlim(0, self.n)
         plt.axis('off')
-        plt.pause(0.1)
+        plt.pause(0.01)
         # plt.show()
 
 if __name__ == "__main__":
@@ -350,5 +349,16 @@ if __name__ == "__main__":
         C.plot_cube()
         print("\n")
 
-        time.sleep(2)
-    plt.show()
+        time.sleep(0.2)
+
+    print("-------------------------------------------------")
+    plt.close()
+
+    for letter in letters:
+        print(letter)
+        C.rotate(letter, direction=CLOCK, slice_dist=0)
+        C.print_cube_with_colors()
+        C.plot_cube()
+        print("\n")
+
+        time.sleep(0.2)
