@@ -238,18 +238,19 @@ class Cube:
         self.faces['R'][...] = R
 
 if __name__ == "__main__":
-    C = Cube(4)
+    import sys
+    print(sys.argv)
+    try:
+        n = int(sys.argv[1])
+    except:
+        n = 3
+    C = Cube(n)
     C.print_cube_with_colors()
     print("\n")
-    # for letter in ['F', 'D', 'R', ]:
     letters = list(face_to_num_map.keys())
     np.random.shuffle(letters)
     for letter in letters:
         print(letter)
-        C.rotate(letter, direction=ANTICLOCK, slice_dist=1)
+        C.rotate(letter, direction=ANTICLOCK, slice_dist=0)
         C.print_cube_with_colors()
         print("\n")
-    # C.rotate("L")
-    # C.print_cube()
-        # print("\n\n\n")
-        # break
