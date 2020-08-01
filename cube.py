@@ -1,4 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import mpl_toolkits.mplot3d.art3d as art3d
+
 
 face_to_num_map = {
     'L': 0, # left
@@ -237,20 +241,114 @@ class Cube:
         self.faces['L'][...] = L
         self.faces['R'][...] = R
 
+    def plot_cube(self):
+        if not hasattr(self, "fig"):
+            self.fig = plt.figure()
+        if not hasattr(self, "ax"):
+            self.ax = self.fig.add_subplot(111, projection='3d')
+
+        plot_color_map = {
+            'R': 'red',
+            'Y': 'yellow',
+            'G': 'lawngreen',
+            'B': 'mediumblue',
+            'W': 'white',
+            'O': 'orange'
+        }
+
+        F = self.faces['F'].get_color_map_array()
+        B = self.faces['B'].get_color_map_array()
+        R = self.faces['R'].get_color_map_array()
+        L = self.faces['L'].get_color_map_array()
+        U = self.faces['U'].get_color_map_array()
+        D = self.faces['D'].get_color_map_array()
+
+        # 'F'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                # p.set_color(plot_color_map[F[self.n - 1 - j, self.n - 1 - i]])
+                p.set_color(plot_color_map[F[self.n - 1 - j, i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=0, zdir="y")
+
+        # 'B'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                # p.set_color(plot_color_map[B[self.n - 1 - j, i]])
+                p.set_color(plot_color_map[B[self.n - 1 - j, self.n - 1 - i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=self.n, zdir="y")
+
+        # # 'R'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                p.set_color(plot_color_map[R[self.n - 1 - j, i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=self.n, zdir="x")
+
+        # # 'L'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                p.set_color(plot_color_map[L[self.n - 1 - j, self.n - 1 -i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=0, zdir="x")
+
+        # 'U'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                p.set_color(plot_color_map[U[self.n - 1 - j, i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=self.n, zdir="z")
+
+        # 'D'
+        for i in range(self.n):
+            for j in range(self.n):
+                p = Rectangle((i, j), 1, 1)
+                p.set_color(plot_color_map[D[j, i]])
+                p.set_edgecolor("black")
+                self.ax.add_patch(p)
+                art3d.pathpatch_2d_to_3d(p, z=0, zdir="z")
+
+
+        self.ax.set_xlim(0, self.n)
+        self.ax.set_ylim(0, self.n)
+        self.ax.set_zlim(0, self.n)
+        plt.axis('off')
+        plt.pause(0.1)
+        # plt.show()
+
 if __name__ == "__main__":
     import sys
+    import time
     print(sys.argv)
     try:
         n = int(sys.argv[1])
     except:
         n = 3
     C = Cube(n)
-    C.print_cube_with_colors()
-    print("\n")
+    C.print_cube()
     letters = list(face_to_num_map.keys())
     np.random.shuffle(letters)
+    C.print_cube_with_colors()
+    C.plot_cube()
+    
+    print("\n")
     for letter in letters:
         print(letter)
-        C.rotate(letter, direction=ANTICLOCK, slice_dist=0)
+        C.rotate(letter, direction=CLOCK, slice_dist=0)
         C.print_cube_with_colors()
+        C.plot_cube()
         print("\n")
+
+        time.sleep(2)
+    plt.show()
