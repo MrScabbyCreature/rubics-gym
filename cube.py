@@ -324,6 +324,7 @@ class Cube:
         self.ax.set_zlim(0, self.n)
         plt.axis('off')
         plt.pause(0.01)
+        plt.pause(0.01) # for some reason, single gives an empty plot
         # plt.show()
 
 if __name__ == "__main__":
