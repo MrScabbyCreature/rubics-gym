@@ -131,7 +131,6 @@ class Cube:
         None
         '''
         if isinstance(face, int):
-            assert face in face_to_num_map, f"{face} not a valid face"
             face = num_to_face_map[face]
         assert face in face_to_num_map, f"{face} not a valid face"
         assert direction in [CLOCK, ANTICLOCK], f"{direction} invalid. Clockwise: {CLOCK}, Anticlockwise: {ANTICLOCK}"
@@ -240,6 +239,12 @@ class Cube:
         self.faces['D'][...] = D
         self.faces['L'][...] = L
         self.faces['R'][...] = R
+
+    def is_complete(self):
+        res = True
+        for face in face_to_num_map:
+            res &= (self.faces[face][...] == face_to_num_map[face]).all()
+        return res
 
     def plot_cube(self):
         if not hasattr(self, "fig") or not plt.fignum_exists(100):
