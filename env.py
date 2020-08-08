@@ -30,14 +30,15 @@ class CubeEnv(gym.Env):
 		info = {}
 		return obs, reward, done, info
 
-	def reset(self):
+	def reset(self, randomize=True):
 		# Reset the state of the environment to an initial state
 		del self.cube
 		self.cube = Cube(self.n)
-		for i in range(self.n * 10):
-			self.step(self.action_space.sample())
+		if randomize:
+			for i in range(self.n * 10):
+				self.step(self.action_space.sample())
 
-	def render(self, mode='term'):
+	def render(self, mode='gui'):
 		# Render the environment to the screen
 		render_modes = ['term', 'gui']
 		assert mode in render_modes, f"Possible modes: {render_modes}. Passed: {mode}"
@@ -46,8 +47,15 @@ class CubeEnv(gym.Env):
 		else:
 			self.cube.plot_cube()
 
-env = CubeEnv(n=3)
-env.render("gui")
-import time
-time.sleep(2)
-env.close()
+if __name__ == "__main__":
+	import time
+
+	env = CubeEnv(n=3)
+	env.reset(randomize=False)
+	for i in range(10):
+		action = env.action_space.sample()
+		print("Action", action)
+		env.step(action)
+		env.render("gui")
+		input()
+	env.close()

@@ -333,38 +333,51 @@ class Cube:
         # plt.show()
 
 if __name__ == "__main__":
-    import sys
     import time
-    print(sys.argv)
-    try:
-        n = int(sys.argv[1])
-    except:
-        n = 3
-    C = Cube(n)
-    C.print_cube()
-    letters = list(face_to_num_map.keys())
-    np.random.shuffle(letters)
-    C.print_cube_with_colors()
-    C.plot_cube()
+
+    print("1) Demo")
+    print("2) Interactive")
+    option = int(input(">>"))
+    if option == 1:
+        try:
+            n = int(input("Enter size of cube(default 3): "))
+        except:
+            n = 3
+        C = Cube(n)
+        C.print_cube_with_colors()
+        C.plot_cube()
+        letters = list(face_to_num_map.keys())
+        np.random.shuffle(letters)
+
+        # demo
+        print("\n")
+        for letter in letters:
+            print(letter)
+            C.rotate(letter, direction=CLOCK, slice_dist=0)
+            C.print_cube_with_colors()
+            C.plot_cube()
+            print("\n")
+
+            time.sleep(0.5)
+        
+        # keep gui open
+        plt.show()
     
-    print("\n")
-    for letter in letters:
-        print(letter)
-        C.rotate(letter, direction=CLOCK, slice_dist=0)
-        C.print_cube_with_colors()
+    if option == 2:
+        n = 3
+        C = Cube(n)
         C.plot_cube()
-        print("\n")
 
-        time.sleep(0.2)
+        print("Enter any invalid value to quit.")
+        while True:
+            f = input("Face (F/B/L/R/U/D): ")
+            try:
+                direction = int(input("Direction (0/1): "))
+            except:
+                direction = -1
 
-    print("-------------------------------------------------")
-    plt.close()
-
-    for letter in letters:
-        print(letter)
-        C.rotate(letter, direction=CLOCK, slice_dist=0)
-        C.print_cube_with_colors()
-        C.plot_cube()
-        print("\n")
-
-        time.sleep(0.2)
+            if f in face_to_num_map and direction in [0, 1]:
+                C.rotate(f, direction)
+                C.plot_cube()
+            else:
+                break
